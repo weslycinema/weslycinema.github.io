@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wesly Garcia — Videograf &amp; Colorist, Walenstadt</title>
+<meta name="description" content="Wesly Garcia — freier Videograf und Colorist in Walenstadt, SG. Talking-Head-Videos, Corporate & Events, Color Grading. Auch für Freelance-Zusammenarbeit verfügbar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- Farbpalette --- */
+    --beige: #F5F1D4;        /* Hintergrund */
+    --beige-alt: #ECE7C2;    /* alternierende Sektionen */
+    --panel: #FBF9EA;        /* Karten */
+    --blue: #3E8CEC;         /* Akzent / Titel */
+    --blue-deep: #2b6bc0;    /* Hover / kleine Labels */
+    --ink: #1c2b45;          /* Fliesstext */
+    --ink-dim: #5d6b83;      /* gedämpfter Text */
+    --video-bg: #16233b;     /* Videoflächen (dunkel für Kontrast) */
+    --line: rgba(28,43,69,0.14);
+    --line-strong: rgba(28,43,69,0.24);
+    --max: 1160px;
+    --gap: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background:var(--beige); color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--blue); color:var(--beige); }
+  img,iframe{ display:block; max-width:100%; }
+
+  h1,h2,h3,.display{
+    font-family:'Bebas Neue','Inter',sans-serif; font-weight:400;
+    letter-spacing:0.01em; line-height:0.95; margin:0;
+  }
+
+  .eyebrow{
+    font-family:'Inter',sans-serif; font-size:0.74rem; font-weight:600;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--blue-deep);
+    margin:0 0 1rem; display:flex; align-items:center; gap:0.7rem;
+  }
+  .eyebrow::before{ content:""; width:1.8rem; height:2px; background:var(--blue); }
+
+  .wrap{ max-width:var(--max); margin:0 auto; padding-left:var(--gap); padding-right:var(--gap); }
+  :focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+
+  .btn{
+    display:inline-flex; align-items:center; gap:0.5rem;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:0.9rem;
+    text-decoration:none; padding:0.85rem 1.5rem; border-radius:2px;
+    transition:transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+  }
+  .btn-primary{ background:var(--blue); color:#fff; }
+  .btn-primary:hover{ background:var(--blue-deep); transform:translateY(-2px); }
+  .btn-ghost{ border:1px solid var(--line-strong); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--blue); color:var(--blue-deep); transform:translateY(-2px); }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:30;
+    background:rgba(245,241,212,0.9); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 0; }
+  .logo{ font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:0.08em; text-decoration:none; color:var(--ink); }
+  .logo span{ color:var(--blue); }
+  nav.links{ display:flex; gap:2rem; align-items:center; }
+  nav.links a{ text-decoration:none; font-size:0.82rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); transition:color .15s ease; }
+  nav.links a:hover{ color:var(--blue-deep); }
+  .nav-cta{ display:none; }
+  @media (min-width:860px){ .nav-cta{ display:inline-flex; } }
+  @media (max-width:859px){ nav.links a:not(.nav-cta){ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:clamp(3.5rem,9vw,6rem) 0 clamp(2.5rem,6vw,4rem); }
+  .hero h1{ font-size:clamp(3.2rem,11vw,8rem); letter-spacing:0.005em; text-transform:uppercase; color:var(--ink); }
+  .hero h1 .thin{ color:var(--blue); }
+  .hero-row{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:1.5rem; margin-top:1.4rem; }
+  .hero p.lede{ font-size:1.1rem; color:var(--ink-dim); max-width:44ch; margin:0; }
+  .hero .actions{ display:flex; gap:0.8rem; flex-wrap:wrap; }
+
+  /* ---------- VIDEO FRAME ---------- */
+  .video-frame{
+    position:relative; width:100%; aspect-ratio:16/9;
+    background:var(--video-bg); border:1px solid var(--line);
+    border-radius:6px; overflow:hidden;
+  }
+  .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .video-placeholder{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:1rem;
+    background:radial-gradient(circle at 50% 40%, #22345a, var(--video-bg) 70%);
+    color:rgba(245,241,212,0.75); text-align:center; padding:1.5rem;
+  }
+  .play-btn{
+    width:74px; height:74px; border-radius:50%; background:var(--blue); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:1.6rem; padding-left:5px;
+  }
+  .video-placeholder .ph-label{ font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding:clamp(4rem,9vw,7rem) 0; }
+  section.alt{ background:var(--beige-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem; margin-bottom:clamp(2rem,5vw,3rem); }
+  .section-head h2{ font-size:clamp(2.4rem,6vw,4rem); text-transform:uppercase; color:var(--blue); }
+  .section-head p{ color:var(--ink-dim); max-width:40ch; margin:0; font-size:0.98rem; }
+
+  /* ---------- BEFORE / AFTER SLIDER ---------- */
+  .grade-block{ margin-bottom:clamp(2.5rem,5vw,3.5rem); }
+  .grade-block:last-child{ margin-bottom:0; }
+  .slider-caption{
+    display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+    font-family:'Inter',sans-serif; font-size:0.72rem; font-weight:600;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:0.7rem;
+  }
+  .slider-caption strong{ color:var(--ink); font-weight:700; }
+  .grade-slider{
+    position:relative; width:100%; aspect-ratio:16/8;
+    border-radius:6px; overflow:hidden; border:1px solid var(--line); background:#0d1220;
+  }
+  .frame{ position:absolute; inset:0; overflow:hidden; }
+  .frame.graded{ clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0); }
+  .divider{ position:absolute; top:0; bottom:0; left:var(--pos,50%); width:2px; background:#fff; transform:translateX(-1px); pointer-events:none; }
+  .handle{
+    position:absolute; top:50%; left:var(--pos,50%); width:38px; height:38px;
+    transform:translate(-50%,-50%); border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+    box-shadow:0 2px 12px rgba(0,0,0,0.45); color:#16233b; font-size:0.95rem;
+  }
+  .handle::after{ content:"⟷"; }
+  .grade-range{ position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; }
+  .tag{
+    position:absolute; bottom:0.9rem; font-family:'Inter',sans-serif;
+    font-size:0.66rem; font-weight:600; letter-spacing:0.1em;
+    padding:0.3rem 0.6rem; border-radius:3px; background:rgba(13,18,32,0.6); color:#fff;
+  }
+  .tag.left{ left:0.9rem; } .tag.right{ right:0.9rem; }
+  .grain{
+    position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .slider-help{ font-size:0.78rem; color:var(--ink-dim); margin-top:0.7rem; text-align:center; }
+
+  /* ---- SCENE: SEE / LANDSCHAFT ---- */
+  .scene-lake .sky{ position:absolute; inset:0; }
+  .scene-lake .sun{ position:absolute; width:13%; aspect-ratio:1; border-radius:50%; top:24%; left:63%; }
+  .scene-lake .mtn{ position:absolute; left:0; right:0; bottom:0; height:70%; }
+  .scene-lake .water{ position:absolute; left:0; right:0; bottom:0; height:32%; }
+  .scene-lake .water::before{ content:""; position:absolute; inset:0; background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.06) 0px,rgba(255,255,255,0.06) 1px,transparent 1px,transparent 5px); }
+  .scene-lake .raw .sky{ background:linear-gradient(180deg,#8a8f92,#9ba0a2 60%,#a7abac); }
+  .scene-lake .raw .sun{ background:radial-gradient(circle,rgba(255,255,255,0.5),rgba(255,255,255,0) 70%); }
+  .scene-lake .raw .mtn.back{ clip-path:polygon(0 55%,12% 30%,26% 48%,40% 20%,55% 44%,68% 18%,82% 42%,100% 26%,100% 100%,0 100%); background:#888d90; }
+  .scene-lake .raw .mtn.mid{ clip-path:polygon(0 72%,15% 46%,30% 64%,48% 38%,63% 60%,80% 40%,100% 58%,100% 100%,0 100%); background:#767b7e; }
+  .scene-lake .raw .mtn.front{ clip-path:polygon(0 88%,20% 66%,38% 80%,58% 60%,75% 78%,100% 68%,100% 100%,0 100%); background:#5b6063; }
+  .scene-lake .raw .water{ background:linear-gradient(180deg,#9ba0a2,#7c8184); }
+  .scene-lake .graded .sky{ background:linear-gradient(180deg,#1a2740,#3a4a66 55%,#e0b57a); }
+  .scene-lake .graded .sun{ background:radial-gradient(circle,#fbe6c4,#e0b57a 45%,rgba(224,181,122,0) 72%); box-shadow:0 0 55px 18px rgba(224,181,122,0.3); }
+  .scene-lake .graded .mtn.back{ clip-path:polygon(0 55%,12% 30%,26% 48%,40% 20%,55% 44%,68% 18%,82% 42%,100% 26%,100% 100%,0 100%); background:#2c3d63; }
+  .scene-lake .graded .mtn.mid{ clip-path:polygon(0 72%,15% 46%,30% 64%,48% 38%,63% 60%,80% 40%,100% 58%,100% 100%,0 100%); background:#223154; }
+  .scene-lake .graded .mtn.front{ clip-path:polygon(0 88%,20% 66%,38% 80%,58% 60%,75% 78%,100% 68%,100% 100%,0 100%); background:#141d30; }
+  .scene-lake .graded .water{ background:linear-gradient(180deg,#2e3b3a,#141d30); }
+
+  /* ---- SCENE: PORTRÄT / BEAUTY ---- */
+  .scene-portrait .bg{ position:absolute; inset:0; }
+  .scene-portrait .body{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:52%; height:46%; border-radius:44% 44% 0 0; }
+  .scene-portrait .head{ position:absolute; bottom:40%; left:50%; transform:translateX(-50%); width:26%; aspect-ratio:1/1.15; border-radius:48% 48% 46% 46%; }
+  .scene-portrait .vignette{ position:absolute; inset:0; }
+  .scene-portrait .raw .bg{ background:linear-gradient(160deg,#9aa39a,#8b968c); }
+  .scene-portrait .raw .body{ background:#7f8a86; }
+  .scene-portrait .raw .head{ background:#a9a596; }
+  .scene-portrait .raw .vignette{ background:radial-gradient(circle at 50% 42%, transparent 45%, rgba(30,35,30,0.28)); }
+  .scene-portrait .graded .bg{ background:linear-gradient(160deg,#2a3350,#43384a 70%,#6b4a52); }
+  .scene-portrait .graded .body{ background:linear-gradient(180deg,#3a4364,#232a45); }
+  .scene-portrait .graded .head{ background:radial-gradient(circle at 42% 38%, #f0c39a, #d99f76 70%, #b87a55); box-shadow:0 0 30px rgba(240,195,154,0.35); }
+  .scene-portrait .graded .vignette{ background:radial-gradient(circle at 50% 40%, transparent 38%, rgba(15,12,20,0.55)); }
+
+  /* ---- SCENE: INTERVIEW / INNENRAUM ---- */
+  .scene-interview .wall{ position:absolute; inset:0; }
+  .scene-interview .window{ position:absolute; top:12%; right:10%; width:26%; height:52%; border-radius:3px; }
+  .scene-interview .floor{ position:absolute; left:0; right:0; bottom:0; height:22%; }
+  .scene-interview .subject{ position:absolute; bottom:0; left:24%; transform:translateX(-50%); width:26%; height:66%; border-radius:40% 40% 0 0; }
+  .scene-interview .shead{ position:absolute; bottom:52%; left:24%; transform:translateX(-50%); width:13%; aspect-ratio:1/1.1; border-radius:48%; }
+  .scene-interview .raw .wall{ background:#b3b2a4; }
+  .scene-interview .raw .window{ background:#e8e6d8; box-shadow:0 0 0 1px rgba(0,0,0,0.05); }
+  .scene-interview .raw .floor{ background:#9a988b; }
+  .scene-interview .raw .subject{ background:#6f7268; }
+  .scene-interview .raw .shead{ background:#aba894; }
+  .scene-interview .graded .wall{ background:linear-gradient(120deg,#243a44,#1b2c38); }
+  .scene-interview .graded .window{ background:linear-gradient(180deg,#f4d9a0,#e0b170); box-shadow:0 0 40px 8px rgba(244,217,160,0.4); }
+  .scene-interview .graded .floor{ background:#12212b; }
+  .scene-interview .graded .subject{ background:linear-gradient(180deg,#33414f,#1c2733); }
+  .scene-interview .graded .shead{ background:radial-gradient(circle at 40% 40%, #efb98a, #c98a5f 75%); }
+
+  /* ---------- VIDEO GRID ---------- */
+  .video-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; }
+  .video-grid.trio{ grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  .video-card{ display:flex; flex-direction:column; gap:0.9rem; }
+  .video-card .meta h3{ font-family:'Inter',sans-serif; font-weight:600; font-size:1rem; margin:0 0 0.2rem; color:var(--ink); }
+  .video-card .meta p{ margin:0; font-size:0.88rem; color:var(--ink-dim); }
+  .video-frame.vertical{ aspect-ratio:9/16; max-width:320px; margin:0 auto; width:100%; }
+
+  /* ---------- ANGEBOT ---------- */
+  .offer-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.25rem; }
+  .offer-card{ background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:1.7rem; display:flex; flex-direction:column; }
+  .offer-card .num{ font-family:'Bebas Neue',sans-serif; font-size:2.2rem; color:var(--blue); line-height:1; margin-bottom:0.6rem; }
+  .offer-card h3{ font-family:'Inter',sans-serif; font-weight:600; font-size:1.15rem; margin:0 0 0.5rem; color:var(--ink); }
+  .offer-card p{ margin:0; color:var(--ink-dim); font-size:0.92rem; }
+
+  /* ---------- FREELANCE ---------- */
+  .freelance{
+    background:var(--blue); color:#fff; border-radius:8px;
+    padding:clamp(1.8rem,4vw,2.6rem); display:flex; flex-wrap:wrap;
+    align-items:center; justify-content:space-between; gap:1.5rem;
+  }
+  .freelance h3{ font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,4vw,2.6rem); text-transform:uppercase; max-width:16ch; color:#fff; }
+  .freelance p{ color:rgba(255,255,255,0.85); margin:0.4rem 0 0; max-width:42ch; font-size:0.95rem; }
+  .freelance .btn-primary{ background:var(--beige); color:var(--blue-deep); }
+  .freelance .btn-primary:hover{ background:#fff; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-inner{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:2rem; }
+  .contact-inner h2{ font-size:clamp(2.6rem,6vw,4.5rem); text-transform:uppercase; max-width:14ch; color:var(--blue); }
+  .contact-links{ display:flex; flex-direction:column; gap:0.9rem; font-size:0.98rem; }
+  .contact-links a{ text-decoration:none; color:var(--ink); }
+  .contact-links a:hover{ color:var(--blue-deep); }
+  .contact-links .label{ font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-dim); display:block; margin-bottom:0.15rem; }
+
+  footer{ border-top:1px solid var(--line); padding:1.7rem 0; font-size:0.78rem; color:var(--ink-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.6rem; }
+  footer a{ color:var(--ink-dim); text-decoration:none; }
+  footer a:hover{ color:var(--blue-deep); }
+
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } .btn{ transition:none; } }
+</style>
+</head>
+<body id="top">
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top">WESLY <span>GARCIA</span></a>
+    <nav class="links">
+      <a href="#reel">Showreel</a>
+      <a href="#beauty">Beauty</a>
+      <a href="#corporate">Corporate &amp; Events</a>
+      <a href="#grading">Color</a>
+      <a class="btn btn-primary nav-cta" href="#kontakt">Kontakt</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Videograf &amp; Colorist — Walenstadt, SG</p>
+      <h1>Bild.<span class="thin"> Ton.</span> Farbe.</h1>
+      <div class="hero-row">
+        <p class="lede">Ich drehe, schneide und grade Videos, die im Feed hängen bleiben — für Ästhetik, Beauty und Corporate. Verfügbar für Projekte und Freelance-Zusammenarbeit.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#kontakt">Projekt anfragen</a>
+          <a class="btn btn-ghost" href="#reel">Showreel ansehen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWREEL -->
+  <section id="reel" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Showreel</p><h2>Ein Blick in die Arbeit</h2></div>
+        <p>Der schnellste Eindruck: Schnitt, Rhythmus und Look in unter zwei Minuten.</p>
+      </div>
+      <div class="video-frame" data-yt="VIDEO_ID_SHOWREEL">
+        <div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Showreel — YouTube-Link einfügen</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÄSTHETIK & BEAUTY -->
+  <section id="beauty">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Nische 01</p><h2>Ästhetik &amp; Beauty</h2></div>
+        <p>Talking-Head-Reels, die Vertrauen aufbauen und Behandlungen verständlich machen.</p>
+      </div>
+      <div class="video-grid trio">
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_1"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 1</div></div></div></div>
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_2"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 2</div></div></div></div>
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_3"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 3</div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORPORATE & EVENTS -->
+  <section id="corporate" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Nische 02</p><h2>Corporate &amp; Events</h2></div>
+        <p>Von der Firmenveranstaltung bis zum Experten-Interview — festgehalten mit filmischer Tiefe.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-frame" data-yt="VIDEO_ID_EVENT"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Event — YouTube-Link einfügen</div></div></div>
+          <div class="meta"><h3>Firmen-Event</h3><p>Eventaufnahme &amp; Schnitt</p></div>
+        </div>
+        <div class="video-card">
+          <div class="video-frame" data-yt="VIDEO_ID_INTERVIEW"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Interview — YouTube-Link einfügen</div></div></div>
+          <div class="meta"><h3>Experten-Interview</h3><p>Interview-Setup &amp; Postproduktion</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR GRADING / VORHER-NACHHER -->
+  <section id="grading">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Der Unterschied</p><h2>Color Grading</h2></div>
+        <p>DaVinci Resolve, ACES-Workflow. Zieh am Regler und sieh, was Farbkorrektur in jedem Szenario verändert.</p>
+      </div>
+
+      <!-- Beispiel 1: Landschaft -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>01 — Landschaft</strong> · Walensee, SG</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-lake">
+          <div class="frame raw"><div class="sky"></div><div class="sun"></div><div class="mtn back"></div><div class="mtn mid"></div><div class="mtn front"></div><div class="water"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="sky"></div><div class="sun"></div><div class="mtn back"></div><div class="mtn mid"></div><div class="mtn front"></div><div class="water"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Landschaft">
+        </div>
+      </div>
+
+      <!-- Beispiel 2: Porträt / Beauty -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>02 — Beauty</strong> · Porträt / Hautton</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-portrait">
+          <div class="frame raw"><div class="bg"></div><div class="body"></div><div class="head"></div><div class="vignette"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="bg"></div><div class="body"></div><div class="head"></div><div class="vignette"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Porträt">
+        </div>
+      </div>
+
+      <!-- Beispiel 3: Interview / Innenraum -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>03 — Interview</strong> · Innenraum / Kunstlicht</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-interview">
+          <div class="frame raw"><div class="wall"></div><div class="window"></div><div class="floor"></div><div class="subject"></div><div class="shead"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="wall"></div><div class="window"></div><div class="floor"></div><div class="subject"></div><div class="shead"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Interview">
+        </div>
+      </div>
+
+      <p class="slider-help">← An jedem Regler ziehen, um den Unterschied zu sehen →</p>
+      <p style="text-align:center; color:var(--ink-dim); font-size:0.9rem; margin-top:1.5rem;">Die Beispiele zeigen den Effekt schematisch. Echte Vorher/Nachher-Frames aus deinen Projekten folgen hier.</p>
+    </div>
+  </section>
+
+  <!-- ANGEBOT -->
+  <section id="angebot" class="alt">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">Angebot</p><h2>Was ich mache</h2></div></div>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="num">01</div><h3>Reels &amp; Talking-Head</h3><p>Vertikale Videos für Social Media, gedreht und geschnitten für maximale Wirkung.</p></div>
+        <div class="offer-card"><div class="num">02</div><h3>Corporate &amp; Events</h3><p>Veranstaltungen und Interviews, professionell festgehalten.</p></div>
+        <div class="offer-card"><div class="num">03</div><h3>Color Grading</h3><p>Farbkorrektur in DaVinci Resolve — auch als eigenständige Leistung.</p></div>
+        <div class="offer-card"><div class="num">04</div><h3>Sounddesign</h3><p>Ton als eigene Disziplin, nicht als Nachgedanke.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREELANCE -->
+  <section id="freelance">
+    <div class="wrap">
+      <div class="freelance">
+        <div>
+          <h3>Auch als Freelancer verfügbar</h3>
+          <p>Für Agenturen und Teams, die einen Videografen oder Coloristen für einzelne Projekte brauchen — meld dich.</p>
+        </div>
+        <a class="btn btn-primary" href="mailto:wesly.cinema@gmail.com?subject=Freelance-Anfrage">Freelance anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt" class="alt">
+    <div class="wrap contact-inner">
+      <h2>Lass uns drehen.</h2>
+      <div class="contact-links">
+        <a href="mailto:wesly.cinema@gmail.com?subject=Projektanfrage"><span class="label">E-Mail</span>wesly.cinema@gmail.com</a>
+        <a href="https://www.instagram.com/weslygarcia_1/" target="_blank" rel="noopener"><span class="label">Instagram</span>@weslygarcia_1</a>
+        <span><span class="label">Standort</span>Walenstadt, SG</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Wesly Garcia · Videograf &amp; Colorist · Walenstadt, SG</span>
+  <a href="https://www.instagram.com/weslygarcia_1/" target="_blank" rel="noopener">Instagram ↗</a>
+</footer>
+
+<script>
+  // Alle Vorher/Nachher-Regler verkabeln
+  document.querySelectorAll('.grade-slider').forEach(slider => {
+    const range = slider.querySelector('.grade-range');
+    const setPos = v => slider.style.setProperty('--pos', v + '%');
+    setPos(range.value);
+    range.addEventListener('input', e => setPos(e.target.value));
+  });
+
+  // Klick-zum-Laden YouTube
+  document.querySelectorAll('.video-frame[data-yt]').forEach(frame => {
+    const id = frame.getAttribute('data-yt');
+    const isPlaceholder = !id || id.startsWith('VIDEO_ID_');
+    frame.style.cursor = isPlaceholder ? 'default' : 'pointer';
+    if (isPlaceholder) return;
+    frame.addEventListener('click', () => {
+      frame.innerHTML =
+        '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" ' +
+        'title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+    });
+  });
+</script>
+
+</body>
+</html>
