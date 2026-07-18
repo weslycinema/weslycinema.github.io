@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wesly.cinema — Videograf &amp; Colorist</title>
+<meta name="description" content="Wesly Garcia — freier Videograf und Colorist. Talking-Head-Videos, Corporate & Events, Color Grading. Auch für Freelance-Zusammenarbeit verfügbar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- Farbpalette --- */
+    --paper: #FAF3E1;        /* Hintergrund */
+    --panel: #F5E7C6;        /* Zusatzfarbe: Blöcke, Karten */
+    --panel-2: #F9EFD8;      /* helle Variante */
+    --orange: #FF6D1F;       /* grosse Titel / Akzent */
+    --orange-light: #FF8A47;
+    --orange-deep: #DB5410;
+    --ink: #222222;          /* Fliesstext */
+    --ink-dim: #6a645c;      /* gedämpfter Text */
+    --dark: #1c1c1c;         /* Videoflächen */
+
+    --line: rgba(34,34,34,0.12);
+    --line-soft: rgba(34,34,34,0.08);
+
+    /* --- Schatten / Tiefe --- */
+    --sh-sm: 0 1px 2px rgba(34,34,34,0.06), 0 2px 6px rgba(34,34,34,0.05);
+    --sh-md: 0 4px 10px rgba(34,34,34,0.07), 0 12px 28px rgba(34,34,34,0.09);
+    --sh-lg: 0 10px 24px rgba(34,34,34,0.10), 0 28px 56px rgba(34,34,34,0.14);
+    --sh-orange: 0 8px 20px rgba(255,109,31,0.32), 0 2px 6px rgba(255,109,31,0.24);
+    --sh-inset: inset 0 1px 0 rgba(255,255,255,0.65);
+
+    --max: 1160px;
+    --gap: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    /* Karo-Papier: feines Raster + stärkere Linie alle 5 Felder */
+    background:
+      repeating-linear-gradient(to right, rgba(34,34,34,0.045) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(to bottom, rgba(34,34,34,0.045) 0 1px, transparent 1px 26px),
+      repeating-linear-gradient(to right, rgba(34,34,34,0.07) 0 1.5px, transparent 1.5px 130px),
+      repeating-linear-gradient(to bottom, rgba(34,34,34,0.07) 0 1.5px, transparent 1.5px 130px),
+      var(--paper);
+    background-attachment: fixed;
+  }
+  ::selection{ background:var(--orange); color:#fff; }
+  img,iframe{ display:block; max-width:100%; }
+
+  h1,h2,h3,.display{
+    font-family:'Bebas Neue','Inter',sans-serif; font-weight:400;
+    letter-spacing:0.01em; line-height:0.95; margin:0;
+  }
+
+  .eyebrow{
+    font-family:'Inter',sans-serif; font-size:0.66rem; font-weight:600;
+    letter-spacing:0.13em; text-transform:uppercase; color:var(--ink-dim);
+    margin:0 0 0.7rem; display:flex; align-items:center; gap:0.6rem;
+  }
+  .eyebrow::before{ content:""; width:1.3rem; height:2px; border-radius:2px;
+    background:linear-gradient(90deg,var(--orange),var(--orange-light)); }
+  .hero .eyebrow::after{ content:""; width:1.3rem; height:2px; border-radius:2px;
+    background:linear-gradient(90deg,var(--orange-light),var(--orange)); }
+
+  .wrap{ max-width:var(--max); margin:0 auto; padding-left:var(--gap); padding-right:var(--gap); }
+  :focus-visible{ outline:2px solid var(--orange); outline-offset:3px; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    position:relative; display:inline-flex; align-items:center; gap:0.5rem;
+    font-family:'Inter',sans-serif; font-weight:600; font-size:0.9rem;
+    text-decoration:none; padding:0.9rem 1.6rem; border-radius:12px;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease, background .2s ease, border-color .2s ease;
+    will-change:transform;
+  }
+  .btn-primary{
+    color:#fff;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 55%,var(--orange-deep));
+    box-shadow:var(--sh-orange), var(--sh-inset);
+  }
+  .btn-primary:hover{ transform:translateY(-3px); box-shadow:0 14px 30px rgba(255,109,31,0.4), 0 4px 10px rgba(255,109,31,0.3), var(--sh-inset); }
+  .btn-primary:active{ transform:translateY(-1px); }
+  .btn-ghost{
+    color:var(--ink);
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    box-shadow:var(--sh-sm), inset 0 1px 0 rgba(255,255,255,0.8);
+  }
+  .btn-ghost:hover{ transform:translateY(-3px); color:var(--orange-deep); border-color:var(--orange-light); box-shadow:var(--sh-md), inset 0 1px 0 rgba(255,255,255,0.8); }
+  .btn-ghost:active{ transform:translateY(-1px); }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:30;
+    background:rgba(250,243,225,0.94);
+    backdrop-filter:blur(14px) saturate(1.3); -webkit-backdrop-filter:blur(14px) saturate(1.3);
+    border-bottom:1px solid var(--line);
+    box-shadow:0 8px 24px rgba(34,34,34,0.05);
+  }
+  .nav-inner{ display:grid; grid-template-columns:1fr auto 1fr; align-items:center; padding:0.6rem 0; }
+  .logo{ grid-column:2; justify-self:center; font-family:'Bebas Neue',sans-serif; font-size:1.55rem; letter-spacing:0.08em; text-decoration:none; color:var(--ink); }
+  .logo span{
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 1px 0 rgba(219,84,16,0.30)) drop-shadow(0 3px 8px rgba(255,109,31,0.28));
+  }
+  nav.links{ grid-column:3; justify-self:end; display:flex; gap:2rem; align-items:center; }
+  nav.links a{ text-decoration:none; font-size:0.82rem; font-weight:500; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-dim); transition:color .15s ease; }
+  nav.links a:hover{ color:var(--orange-deep); }
+  .nav-cta{ display:none; padding:0.6rem 1.2rem; }
+  .nav-cta.btn-primary{
+    color:#fff;
+    background:linear-gradient(180deg,var(--orange),var(--orange-deep));
+    text-shadow:0 1px 2px rgba(90,30,0,0.35);
+  }
+  @media (min-width:860px){ .nav-cta{ display:inline-flex; } }
+  @media (max-width:859px){ nav.links a:not(.nav-cta){ display:none; } }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding:clamp(3.5rem,9vw,6.5rem) 0 clamp(2.5rem,6vw,4rem); }
+  .hero h1{
+    font-size:clamp(3.2rem,11vw,8.5rem); letter-spacing:0.005em; text-transform:uppercase;
+    color:var(--ink);
+  }
+  .hero h1 .thin{
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(219,84,16,0.30)) drop-shadow(0 6px 14px rgba(255,109,31,0.28));
+  }
+  .hero-row{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:1.5rem; margin-top:1.4rem; }
+  .hero p.lede{ font-size:1.1rem; color:var(--ink-dim); max-width:44ch; margin:0; }
+  .hero .actions{ display:flex; gap:0.8rem; flex-wrap:wrap; }
+
+  /* ---------- VIDEO FRAME ---------- */
+  .video-frame{
+    position:relative; width:100%; aspect-ratio:16/9;
+    background:var(--dark); border:1px solid rgba(255,255,255,0.12);
+    border-radius:16px; overflow:hidden;
+    box-shadow:var(--sh-lg);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease;
+  }
+  .video-frame:hover{ transform:translateY(-4px); box-shadow:0 16px 34px rgba(34,34,34,0.16), 0 40px 70px rgba(34,34,34,0.18); }
+  .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .video-placeholder{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:1rem;
+    background:radial-gradient(circle at 50% 38%, #333030, var(--dark) 70%);
+    color:rgba(250,243,225,0.75); text-align:center; padding:1.5rem;
+  }
+  .play-btn{
+    width:78px; height:78px; border-radius:50%; color:#fff;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 60%,var(--orange-deep));
+    display:flex; align-items:center; justify-content:center; font-size:1.7rem; padding-left:5px;
+    box-shadow:0 10px 24px rgba(255,109,31,0.45), inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+  .video-placeholder .ph-label{ font-size:0.8rem; letter-spacing:0.12em; text-transform:uppercase; }
+
+  /* ---------- SECTIONS ---------- */
+  section{ padding:clamp(4rem,9vw,7rem) 0; position:relative; }
+  /* Blöcke als schwebende Glas-Panels mit orangem Schimmer */
+  section.alt{
+    background:none; border:0; box-shadow:none;
+    padding:clamp(2rem,5vw,3.5rem) var(--gap);
+  }
+  section.alt > .wrap{
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23f)' opacity='0.14'/></svg>"),
+      linear-gradient(155deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.18) 32%, rgba(255,255,255,0) 60%),
+      linear-gradient(160deg, rgba(255,109,31,0.16), rgba(245,231,198,0.80) 55%, rgba(250,243,225,0.76));
+    backdrop-filter:blur(30px) saturate(1.7); -webkit-backdrop-filter:blur(30px) saturate(1.7);
+    border:1px solid rgba(255,255,255,0.85);
+    border-radius:28px;
+    padding-top:clamp(2.5rem,6vw,4.5rem);
+    padding-bottom:clamp(2.5rem,6vw,4.5rem);
+    box-shadow:
+      0 10px 24px rgba(34,34,34,0.08),
+      0 30px 60px rgba(34,34,34,0.12),
+      0 4px 30px rgba(255,109,31,0.10),
+      inset 0 1px 0 rgba(255,255,255,0.95),
+      inset 0 -1px 0 rgba(255,255,255,0.4);
+  }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem; margin-bottom:clamp(2rem,5vw,3rem); }
+  .section-head h2{ font-size:clamp(2.4rem,6vw,4rem); text-transform:uppercase;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(219,84,16,0.25)) drop-shadow(0 5px 12px rgba(255,109,31,0.22)); }
+  .section-head p{ color:var(--ink-dim); max-width:40ch; margin:0; font-size:0.98rem; }
+
+  /* ---------- BEFORE / AFTER SLIDER ---------- */
+  .grade-block{ margin-bottom:clamp(2.5rem,5vw,3.5rem); }
+  .grade-block:last-child{ margin-bottom:0; }
+  .slider-caption{
+    display:flex; justify-content:space-between; align-items:baseline; gap:1rem;
+    font-family:'Inter',sans-serif; font-size:0.72rem; font-weight:600;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-dim); margin-bottom:0.7rem;
+  }
+  .slider-caption strong{ color:var(--ink); font-weight:700; }
+  .grade-slider{
+    position:relative; width:100%; aspect-ratio:16/8;
+    border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.12); background:#141414;
+    box-shadow:var(--sh-lg);
+  }
+  .frame{ position:absolute; inset:0; overflow:hidden; }
+  .frame.graded{ clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0); }
+  .divider{ position:absolute; top:0; bottom:0; left:var(--pos,50%); width:2px; background:#fff; transform:translateX(-1px); pointer-events:none; box-shadow:0 0 10px rgba(255,255,255,0.5); }
+  .handle{
+    position:absolute; top:50%; left:var(--pos,50%); width:42px; height:42px;
+    transform:translate(-50%,-50%); border-radius:50%; background:#fff;
+    display:flex; align-items:center; justify-content:center; pointer-events:none;
+    box-shadow:0 4px 16px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.9); color:var(--ink); font-size:0.95rem;
+  }
+  .handle::after{ content:"⟷"; }
+  .grade-range{ position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:ew-resize; }
+  .tag{
+    position:absolute; bottom:0.9rem; font-family:'Inter',sans-serif;
+    font-size:0.66rem; font-weight:600; letter-spacing:0.1em;
+    padding:0.32rem 0.65rem; border-radius:8px; color:#fff;
+    background:rgba(20,20,20,0.5); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,0.14);
+  }
+  .tag.left{ left:0.9rem; } .tag.right{ right:0.9rem; }
+  .grain{
+    position:absolute; inset:0; opacity:0.05; mix-blend-mode:overlay; pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .slider-help{ font-size:0.78rem; color:var(--ink-dim); margin-top:0.7rem; text-align:center; }
+
+  /* ---- SCENE: SEE / LANDSCHAFT ---- */
+  .scene-lake .sky{ position:absolute; inset:0; }
+  .scene-lake .sun{ position:absolute; width:13%; aspect-ratio:1; border-radius:50%; top:24%; left:63%; }
+  .scene-lake .mtn{ position:absolute; left:0; right:0; bottom:0; height:70%; }
+  .scene-lake .water{ position:absolute; left:0; right:0; bottom:0; height:32%; }
+  .scene-lake .water::before{ content:""; position:absolute; inset:0; background:repeating-linear-gradient(to bottom,rgba(255,255,255,0.06) 0px,rgba(255,255,255,0.06) 1px,transparent 1px,transparent 5px); }
+  .scene-lake .raw .sky{ background:linear-gradient(180deg,#8a8f92,#9ba0a2 60%,#a7abac); }
+  .scene-lake .raw .sun{ background:radial-gradient(circle,rgba(255,255,255,0.5),rgba(255,255,255,0) 70%); }
+  .scene-lake .raw .mtn.back{ clip-path:polygon(0 55%,12% 30%,26% 48%,40% 20%,55% 44%,68% 18%,82% 42%,100% 26%,100% 100%,0 100%); background:#888d90; }
+  .scene-lake .raw .mtn.mid{ clip-path:polygon(0 72%,15% 46%,30% 64%,48% 38%,63% 60%,80% 40%,100% 58%,100% 100%,0 100%); background:#767b7e; }
+  .scene-lake .raw .mtn.front{ clip-path:polygon(0 88%,20% 66%,38% 80%,58% 60%,75% 78%,100% 68%,100% 100%,0 100%); background:#5b6063; }
+  .scene-lake .raw .water{ background:linear-gradient(180deg,#9ba0a2,#7c8184); }
+  .scene-lake .graded .sky{ background:linear-gradient(180deg,#1a2740,#3a4a66 55%,#e0b57a); }
+  .scene-lake .graded .sun{ background:radial-gradient(circle,#fbe6c4,#e0b57a 45%,rgba(224,181,122,0) 72%); box-shadow:0 0 55px 18px rgba(224,181,122,0.3); }
+  .scene-lake .graded .mtn.back{ clip-path:polygon(0 55%,12% 30%,26% 48%,40% 20%,55% 44%,68% 18%,82% 42%,100% 26%,100% 100%,0 100%); background:#2c3d63; }
+  .scene-lake .graded .mtn.mid{ clip-path:polygon(0 72%,15% 46%,30% 64%,48% 38%,63% 60%,80% 40%,100% 58%,100% 100%,0 100%); background:#223154; }
+  .scene-lake .graded .mtn.front{ clip-path:polygon(0 88%,20% 66%,38% 80%,58% 60%,75% 78%,100% 68%,100% 100%,0 100%); background:#141d30; }
+  .scene-lake .graded .water{ background:linear-gradient(180deg,#2e3b3a,#141d30); }
+
+  /* ---- SCENE: PORTRÄT / BEAUTY ---- */
+  .scene-portrait .bg{ position:absolute; inset:0; }
+  .scene-portrait .body{ position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:52%; height:46%; border-radius:44% 44% 0 0; }
+  .scene-portrait .head{ position:absolute; bottom:40%; left:50%; transform:translateX(-50%); width:26%; aspect-ratio:1/1.15; border-radius:48% 48% 46% 46%; }
+  .scene-portrait .vignette{ position:absolute; inset:0; }
+  .scene-portrait .raw .bg{ background:linear-gradient(160deg,#9aa39a,#8b968c); }
+  .scene-portrait .raw .body{ background:#7f8a86; }
+  .scene-portrait .raw .head{ background:#a9a596; }
+  .scene-portrait .raw .vignette{ background:radial-gradient(circle at 50% 42%, transparent 45%, rgba(30,35,30,0.28)); }
+  .scene-portrait .graded .bg{ background:linear-gradient(160deg,#2a3350,#43384a 70%,#6b4a52); }
+  .scene-portrait .graded .body{ background:linear-gradient(180deg,#3a4364,#232a45); }
+  .scene-portrait .graded .head{ background:radial-gradient(circle at 42% 38%, #f0c39a, #d99f76 70%, #b87a55); box-shadow:0 0 30px rgba(240,195,154,0.35); }
+  .scene-portrait .graded .vignette{ background:radial-gradient(circle at 50% 40%, transparent 38%, rgba(15,12,20,0.55)); }
+
+  /* ---- SCENE: INTERVIEW / INNENRAUM ---- */
+  .scene-interview .wall{ position:absolute; inset:0; }
+  .scene-interview .window{ position:absolute; top:12%; right:10%; width:26%; height:52%; border-radius:3px; }
+  .scene-interview .floor{ position:absolute; left:0; right:0; bottom:0; height:22%; }
+  .scene-interview .subject{ position:absolute; bottom:0; left:24%; transform:translateX(-50%); width:26%; height:66%; border-radius:40% 40% 0 0; }
+  .scene-interview .shead{ position:absolute; bottom:52%; left:24%; transform:translateX(-50%); width:13%; aspect-ratio:1/1.1; border-radius:48%; }
+  .scene-interview .raw .wall{ background:#b3b2a4; }
+  .scene-interview .raw .window{ background:#e8e6d8; box-shadow:0 0 0 1px rgba(0,0,0,0.05); }
+  .scene-interview .raw .floor{ background:#9a988b; }
+  .scene-interview .raw .subject{ background:#6f7268; }
+  .scene-interview .raw .shead{ background:#aba894; }
+  .scene-interview .graded .wall{ background:linear-gradient(120deg,#243a44,#1b2c38); }
+  .scene-interview .graded .window{ background:linear-gradient(180deg,#f4d9a0,#e0b170); box-shadow:0 0 40px 8px rgba(244,217,160,0.4); }
+  .scene-interview .graded .floor{ background:#12212b; }
+  .scene-interview .graded .subject{ background:linear-gradient(180deg,#33414f,#1c2733); }
+  .scene-interview .graded .shead{ background:radial-gradient(circle at 40% 40%, #efb98a, #c98a5f 75%); }
+
+  /* ---------- VIDEO GRID ---------- */
+  .video-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.8rem; }
+  .video-grid.trio{ grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  .video-card{ display:flex; flex-direction:column; gap:0.9rem; }
+  .video-card .meta h3{ font-family:'Inter',sans-serif; font-weight:600; font-size:1rem; margin:0 0 0.2rem; color:var(--ink); }
+  .video-card .meta p{ margin:0; font-size:0.88rem; color:var(--ink-dim); }
+  .video-frame.vertical{ aspect-ratio:9/16; max-width:320px; margin:0 auto; width:100%; }
+
+  /* ---------- ÜBER MICH ---------- */
+  .about-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:clamp(1.8rem,5vw,3.5rem); align-items:center; }
+  @media (max-width:760px){ .about-grid{ grid-template-columns:1fr; } }
+  .portrait, .portrait-img{
+    width:100%; aspect-ratio:4/5; border-radius:18px; overflow:hidden;
+    box-shadow:var(--sh-lg); border:1px solid rgba(255,255,255,0.6);
+  }
+  .portrait-img{ object-fit:cover; display:block; }
+  .portrait{
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:1.5rem;
+    background:linear-gradient(160deg,#3a3a3a,var(--dark) 60%,#2a2320);
+    color:rgba(250,243,225,0.7); font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase;
+  }
+  .about-copy p{ color:var(--ink-dim); font-size:1rem; margin:0 0 1rem; }
+  .about-copy p:last-child{ margin-bottom:0; }
+  .about-copy h2{ font-size:clamp(2.2rem,5.5vw,3.4rem); text-transform:uppercase; margin-bottom:1.2rem;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(219,84,16,0.25)) drop-shadow(0 5px 12px rgba(255,109,31,0.22)); }
+  .about-facts{ display:flex; flex-wrap:wrap; gap:1.6rem; margin-top:1.5rem; padding-top:1.3rem; border-top:1px solid var(--line); }
+  .about-facts div{ min-width:110px; }
+  .about-facts .k{ font-family:'Bebas Neue',sans-serif; font-size:1.7rem; color:var(--orange); line-height:1; }
+  .about-facts .v{ font-size:0.8rem; color:var(--ink-dim); }
+
+  /* ---------- ANGEBOT ---------- */
+  .offer-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.4rem; }
+  .offer-card{
+    position:relative; border-radius:16px; padding:1.8rem; display:flex; flex-direction:column;
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='f2'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23f2)' opacity='0.12'/></svg>"),
+      linear-gradient(155deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 38%, rgba(255,255,255,0) 65%),
+      linear-gradient(180deg, rgba(253,248,234,0.85), rgba(245,231,198,0.78));
+    backdrop-filter:blur(20px) saturate(1.4); -webkit-backdrop-filter:blur(20px) saturate(1.4);
+    border:1px solid rgba(255,255,255,0.8);
+    box-shadow:var(--sh-md), inset 0 1px 0 rgba(255,255,255,0.95);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease;
+  }
+  .offer-card:hover{ transform:translateY(-6px); box-shadow:var(--sh-lg), inset 0 1px 0 rgba(255,255,255,0.9); }
+  .offer-card .num{
+    font-family:'Bebas Neue',sans-serif; font-size:2.4rem; line-height:1; margin-bottom:0.6rem;
+    color:var(--orange);
+  }
+  .offer-card h3{ font-family:'Inter',sans-serif; font-weight:600; font-size:1.15rem; margin:0 0 0.5rem; color:var(--ink); }
+  .offer-card p{ margin:0; color:var(--ink-dim); font-size:0.92rem; }
+
+  /* ---------- FREELANCE ---------- */
+  .freelance{
+    position:relative; overflow:hidden; color:#fff; border-radius:20px;
+    padding:clamp(1.8rem,4vw,2.8rem); display:flex; flex-wrap:wrap;
+    align-items:center; justify-content:space-between; gap:1.5rem;
+    background:linear-gradient(135deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    box-shadow:0 20px 50px rgba(219,84,16,0.32), inset 0 1px 0 rgba(255,255,255,0.35);
+  }
+  .freelance::after{ content:""; position:absolute; top:-40%; right:-10%; width:60%; height:180%;
+    background:radial-gradient(circle, rgba(255,255,255,0.2), transparent 60%); pointer-events:none; }
+  .freelance > *{ position:relative; z-index:1; }
+  .freelance h3{ font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,4vw,2.6rem); text-transform:uppercase; max-width:16ch; color:#fff; }
+  .freelance p{ color:rgba(255,255,255,0.92); margin:0.4rem 0 0; max-width:42ch; font-size:0.95rem; }
+  .freelance .btn-primary{ background:#fff; color:var(--orange-deep); box-shadow:0 8px 20px rgba(120,45,0,0.22), inset 0 1px 0 rgba(255,255,255,0.9); text-shadow:none; }
+  .freelance .btn-primary:hover{ background:var(--panel-2); }
+
+  /* ---------- CONTACT ---------- */
+  .contact-inner{ display:flex; flex-wrap:wrap; justify-content:space-between; align-items:flex-end; gap:2rem; }
+  .contact-inner h2{ font-size:clamp(2.6rem,6vw,4.5rem); text-transform:uppercase; max-width:14ch;
+    background:linear-gradient(180deg,var(--orange-light),var(--orange) 45%,var(--orange-deep));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(219,84,16,0.25)) drop-shadow(0 5px 12px rgba(255,109,31,0.22)); }
+  .contact-links{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1.1rem 2rem; font-size:0.98rem; }
+  .contact-links a{ text-decoration:none; color:var(--ink); }
+  .contact-links a:hover{ color:var(--orange-deep); }
+  .contact-links .label{ font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-dim); display:block; margin-bottom:0.15rem; }
+
+  footer{
+    background:var(--dark); color:rgba(250,243,225,0.72);
+    padding:1.5rem var(--gap); text-align:center;
+    font-size:0.78rem; letter-spacing:0.04em;
+  }
+
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } .btn,.offer-card,.video-frame{ transition:none; } }
+</style>
+</head>
+<body id="top">
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="logo" href="#top">WESLY.<span>CINEMA</span></a>
+    <nav class="links">
+      <a href="#reel">Showreel</a>
+      <a href="#beauty">Info-Reels</a>
+      <a href="#corporate">Corporate &amp; Events</a>
+      <a href="#grading">Color</a>
+      <a href="#ueber">Über mich</a>
+      <a class="btn btn-primary nav-cta" href="#kontakt">Kontakt</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Videograf &amp; Colorist</p>
+      <h1>Kamera.<span class="thin"> Farbe.</span> Ton.</h1>
+      <div class="hero-row">
+        <p class="lede">Spezialisiert auf Videos, die für sich sprechen. So stärke ich die Marke jedes Unternehmens. Für Ergebnisse, die man nicht vergisst.</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#kontakt">Let's talk</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOWREEL -->
+  <section id="reel" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Showreel</p><h2>Ein Blick in die Arbeit</h2></div>
+        <p>Der schnellste Eindruck: Schnitt, Rhythmus und Look in unter zwei Minuten.</p>
+      </div>
+      <div class="video-frame" data-yt="VIDEO_ID_SHOWREEL">
+        <div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Showreel — YouTube-Link einfügen</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÄSTHETIK & BEAUTY -->
+  <section id="beauty">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Nische 01</p><h2>Info-Reels</h2></div>
+        <p>Talking-Head-Reels, die Vertrauen aufbauen und Behandlungen verständlich machen.</p>
+      </div>
+      <div class="video-grid trio">
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_1"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 1</div></div></div></div>
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_2"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 2</div></div></div></div>
+        <div class="video-card"><div class="video-frame vertical" data-yt="VIDEO_ID_BEAUTY_3"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Talking-Head 3</div></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORPORATE & EVENTS -->
+  <section id="corporate" class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Nische 02</p><h2>Corporate &amp; Events</h2></div>
+        <p>Von der Firmenveranstaltung bis zum Experten-Interview — festgehalten mit filmischer Tiefe.</p>
+      </div>
+      <div class="video-grid">
+        <div class="video-card">
+          <div class="video-frame" data-yt="VIDEO_ID_EVENT"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Event — YouTube-Link einfügen</div></div></div>
+          <div class="meta"><h3>Firmen-Event</h3><p>Eventaufnahme &amp; Schnitt</p></div>
+        </div>
+        <div class="video-card">
+          <div class="video-frame" data-yt="VIDEO_ID_INTERVIEW"><div class="video-placeholder"><div class="play-btn">▶</div><div class="ph-label">Interview — YouTube-Link einfügen</div></div></div>
+          <div class="meta"><h3>Experten-Interview</h3><p>Interview-Setup &amp; Postproduktion</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR GRADING / VORHER-NACHHER -->
+  <section id="grading">
+    <div class="wrap">
+      <div class="section-head">
+        <div><p class="eyebrow">Der Look</p><h2>Color Grading</h2></div>
+        <p>DaVinci Resolve, ACES-Workflow. Zieh am Regler und sieh, was Farbkorrektur in jedem Szenario verändert.</p>      </div>
+
+      <!-- Beispiel 1: Landschaft -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>01 — Landschaft</strong> · Walensee, SG</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-lake">
+          <div class="frame raw"><div class="sky"></div><div class="sun"></div><div class="mtn back"></div><div class="mtn mid"></div><div class="mtn front"></div><div class="water"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="sky"></div><div class="sun"></div><div class="mtn back"></div><div class="mtn mid"></div><div class="mtn front"></div><div class="water"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Landschaft">
+        </div>
+      </div>
+
+      <!-- Beispiel 2: Porträt / Beauty -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>02 — Beauty</strong> · Porträt / Hautton</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-portrait">
+          <div class="frame raw"><div class="bg"></div><div class="body"></div><div class="head"></div><div class="vignette"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="bg"></div><div class="body"></div><div class="head"></div><div class="vignette"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Porträt">
+        </div>
+      </div>
+
+      <!-- Beispiel 3: Interview / Innenraum -->
+      <div class="grade-block">
+        <div class="slider-caption"><span><strong>03 — Interview</strong> · Innenraum / Kunstlicht</span><span>Vorher / Nachher</span></div>
+        <div class="grade-slider scene-interview">
+          <div class="frame raw"><div class="wall"></div><div class="window"></div><div class="floor"></div><div class="subject"></div><div class="shead"></div><div class="grain"></div><span class="tag left">Roh</span></div>
+          <div class="frame graded"><div class="wall"></div><div class="window"></div><div class="floor"></div><div class="subject"></div><div class="shead"></div><div class="grain"></div><span class="tag right">Graded</span></div>
+          <div class="divider"></div><div class="handle"></div>
+          <input class="grade-range" type="range" min="0" max="100" value="50" aria-label="Regler Interview">
+        </div>
+      </div>
+
+      <p class="slider-help">← An jedem Regler ziehen, um den Unterschied zu sehen →</p>
+      <p style="text-align:center; color:var(--ink-dim); font-size:0.9rem; margin-top:1.5rem;">Die Beispiele zeigen den Effekt schematisch. Echte Vorher/Nachher-Frames aus deinen Projekten folgen hier.</p>
+    </div>
+  </section>
+
+  <!-- ÜBER MICH -->
+  <section id="ueber" class="alt">
+    <div class="wrap">
+      <div class="about-grid">
+        <!-- FOTO: Lade dein Bild als "portrait.jpg" ins Repository hoch und ersetze
+             das <div class="portrait">…</div> unten durch diese eine Zeile:
+             <img src="portrait.jpg" alt="Wesly Garcia" class="portrait-img"> -->
+        <div class="portrait">Dein Foto — portrait.jpg</div>
+
+        <div class="about-copy">
+          <p class="eyebrow">Über mich</p>
+          <h2>Hinter der Kamera</h2>
+          <p>Seit 2021 arbeite ich selbstständig als Videograf und Colorist. Angefangen hat alles mit der Frage, warum manche Bilder hängen bleiben und andere nicht — die Antwort liegt meistens in der Farbe.</p>
+          <p>Heute drehe ich für Unternehmen in der ganzen Schweiz: Reels, Interviews und Events. Vom ersten Frame bis zum fertigen Master mache ich alles selbst — Kamera, Schnitt, Color Grading und Sounddesign. Kein Weiterreichen, keine Zwischenstationen.</p>
+          <p>Gearbeitet wird auf Hochdeutsch und Schweizerdeutsch.</p>
+          <div class="about-facts">
+            <div><div class="k">2021</div><div class="v">selbstständig seit</div></div>
+            <div><div class="k">ACES</div><div class="v">Grading-Workflow</div></div>
+            <div><div class="k">SG</div><div class="v">Walenstadt, Schweiz</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ANGEBOT -->
+  <section id="angebot">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">Angebot</p><h2>Was ich mache</h2></div></div>
+      <div class="offer-grid">
+        <div class="offer-card"><div class="num">01</div><h3>Reels &amp; Talking-Head</h3><p>Vertikale Videos für Social Media, gedreht und geschnitten für maximale Wirkung.</p></div>
+        <div class="offer-card"><div class="num">02</div><h3>Corporate &amp; Events</h3><p>Veranstaltungen und Interviews, professionell festgehalten.</p></div>
+        <div class="offer-card"><div class="num">03</div><h3>Color Grading</h3><p>Farbkorrektur in DaVinci Resolve — auch als eigenständige Leistung.</p></div>
+        <div class="offer-card"><div class="num">04</div><h3>Sounddesign</h3><p>Ton als eigene Disziplin, nicht als Nachgedanke.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FREELANCE -->
+  <section id="freelance">
+    <div class="wrap">
+      <div class="freelance">
+        <div>
+          <h3>Auch als Freelancer verfügbar</h3>
+          <p>Für Agenturen und Teams, die einen Videografen oder Coloristen für einzelne Projekte brauchen — meld dich.</p>
+        </div>
+        <a class="btn btn-primary" href="mailto:wesly.cinema@gmail.com?subject=Freelance-Anfrage">Freelance anfragen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt" class="alt">
+    <div class="wrap contact-inner">
+      <h2>Follow me</h2>
+      <div class="contact-links">
+        <a href="mailto:wesly.cinema@gmail.com?subject=Projektanfrage"><span class="label">E-Mail</span>wesly.cinema@gmail.com</a>
+        <a href="tel:TELEFONNUMMER"><span class="label">Telefon</span>+41 XX XXX XX XX</a>
+        <a href="https://www.instagram.com/weslygarcia_1/" target="_blank" rel="noopener"><span class="label">Instagram</span>@weslygarcia_1</a>
+        <a href="YOUTUBE_LINK" target="_blank" rel="noopener"><span class="label">YouTube</span>wesly.cinema</a>
+        <a href="LINKEDIN_LINK" target="_blank" rel="noopener"><span class="label">LinkedIn</span>Wesly Garcia</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 wesly.cinema — Alle Rechte vorbehalten
+</footer>
+
+<script>
+  // Alle Vorher/Nachher-Regler verkabeln
+  document.querySelectorAll('.grade-slider').forEach(slider => {
+    const range = slider.querySelector('.grade-range');
+    const setPos = v => slider.style.setProperty('--pos', v + '%');
+    setPos(range.value);
+    range.addEventListener('input', e => setPos(e.target.value));
+  });
+
+  // Klick-zum-Laden YouTube
+  document.querySelectorAll('.video-frame[data-yt]').forEach(frame => {
+    const id = frame.getAttribute('data-yt');
+    const isPlaceholder = !id || id.startsWith('VIDEO_ID_');
+    frame.style.cursor = isPlaceholder ? 'default' : 'pointer';
+    if (isPlaceholder) return;
+    frame.addEventListener('click', () => {
+      frame.innerHTML =
+        '<iframe src="https://www.youtube.com/embed/' + id + '?autoplay=1&rel=0" ' +
+        'title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>';
+    });
+  });
+</script>
+
+</body>
+</html>
