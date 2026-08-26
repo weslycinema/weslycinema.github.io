@@ -125,6 +125,11 @@ export function dibujarCuerpo(host, vista, marcasPorZona = {}, onZona = null, se
 
     if (onZona){
       el.addEventListener('click', () => onZona(z.id, z));
+      el.setAttribute('tabindex','0');
+      el.setAttribute('role','button');
+      el.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); onZona(z.id, z); }
+      });
       el.style.cursor = 'pointer';
     } else {
       el.style.cursor = 'default';
