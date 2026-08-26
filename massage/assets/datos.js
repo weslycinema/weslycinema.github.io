@@ -20,11 +20,11 @@ const haceDias = (n, h = 10, m = 0) => {
 };
 
 export const TIPOS_MARCA = {
-  contractura: {etq:'Contractura', color:'#fb923c'},
-  dolor:       {etq:'Dolor',       color:'#ef4444'},
-  tension:     {etq:'Tensión',     color:'#fbbf24'},
+  contractura: {etq:'Contractura', color:'#d1712f'},
+  dolor:       {etq:'Dolor',       color:'#bd4b2d'},
+  tension:     {etq:'Tensión',     color:'#e09c3c'},
   lesion:      {etq:'Lesión',      color:'#f472b6'},
-  evitar:      {etq:'No tratar',   color:'#6366f1'},
+  evitar:      {etq:'No tratar',   color:'#4a569e'},
 };
 
 function semilla(){

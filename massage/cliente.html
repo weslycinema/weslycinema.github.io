@@ -6,7 +6,7 @@
 <title>Ficha de cliente · Centro de masaje (prototipo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Albert+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/base.css">
 </head>
 <body data-pagina="cliente">
@@ -56,12 +56,12 @@
         </div>
 
         <div class="leyenda">
-          <span><i style="background:#fde68a"></i>1 leve</span>
-          <span><i style="background:#fbbf24"></i>2</span>
-          <span><i style="background:#fb923c"></i>3</span>
-          <span><i style="background:#ef4444"></i>4</span>
-          <span><i style="background:#b91c1c"></i>5 severo</span>
-          <span><i style="background:#3730a3"></i>no tratar</span>
+          <span><i style="background:#e9c65f"></i>1 leve</span>
+          <span><i style="background:#e09c3c"></i>2</span>
+          <span><i style="background:#d1712f"></i>3</span>
+          <span><i style="background:#bd4b2d"></i>4</span>
+          <span><i style="background:#8f2a20"></i>5 severo</span>
+          <span><i style="background:#4a569e"></i>no tratar</span>
         </div>
         <p class="tiny muted" style="text-align:center;margin:10px 0 0">
           Vista frontal: la izquierda de la imagen es el lado <em>derecho</em> del paciente.
@@ -276,7 +276,7 @@ function pintarBorrador(){
   $('#borrador-card').hidden = n === 0;
   $('#borrador-n').textContent = `${n} marca${n===1?'':'s'} sin guardar`;
   $('#borrador-lista').innerHTML = borrador.marcas.map((m,i) => `
-    <div class="marca" style="border-left-color:${m.tipo==='evitar'?'#6366f1':COLOR_INT[m.int]}">
+    <div class="marca" style="border-left-color:${m.tipo==='evitar'?'#4a569e':COLOR_INT[m.int]}">
       <div style="display:flex;align-items:center;gap:8px">
         <span class="zn">${nombreZona(m.vista, m.zona)} ${etiquetaLado((m.zona.match(/_(izq|der)$/)||[])[1])}</span>
         <span class="spacer"></span>
@@ -323,7 +323,7 @@ function pintarHistorial(){
       <div style="margin:3px 0 5px">${s.notas}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
         ${(s.marcas||[]).map(m => `
-          <span class="chip" style="border-left:3px solid ${m.tipo==='evitar'?'#6366f1':COLOR_INT[m.int]}">
+          <span class="chip" style="border-left:3px solid ${m.tipo==='evitar'?'#4a569e':COLOR_INT[m.int]}">
             ${nombreZona(m.vista, m.zona)} ${etiquetaLado((m.zona.match(/_(izq|der)$/)||[])[1])}
             ${m.tipo!=='evitar'?`· ${m.int}`:'· no tratar'}
           </span>`).join('')}

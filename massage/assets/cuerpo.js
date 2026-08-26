@@ -80,7 +80,7 @@ export function etiquetaLado(lado){
   return lado === 'izq' ? 'izq.' : lado === 'der' ? 'der.' : '';
 }
 
-const COLOR_INT = {1:'#fde68a',2:'#fbbf24',3:'#fb923c',4:'#ef4444',5:'#b91c1c'};
+const COLOR_INT = {1:'#e9c65f',2:'#e09c3c',3:'#d1712f',4:'#bd4b2d',5:'#8f2a20'};
 
 /**
  * Dibuja el cuerpo dentro de `host`.
@@ -114,7 +114,7 @@ export function dibujarCuerpo(host, vista, marcasPorZona = {}, onZona = null, se
       if (m.evitar) el.classList.add('evitar');
       // style inline: una regla CSS de clase gana a un atributo de presentación
       if (m.intensidad) el.style.fill = COLOR_INT[m.intensidad];
-      else if (m.evitar) el.style.fill = '#3730a3';
+      else if (m.evitar) el.style.fill = '#4a569e';
     }
     if (seleccion === z.id) el.classList.add('sel');
 
