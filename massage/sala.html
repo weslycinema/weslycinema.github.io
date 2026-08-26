@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pantalla de sala · Centro de masaje (prototipo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+</head>
+<body class="kiosco" data-pagina="sala">
+
+<div class="k">
+  <div class="k-top">
+    <div>
+      <div class="k-sala" id="k-sala">Sala</div>
+      <div class="k-tipo" id="k-tipo">—</div>
+    </div>
+    <div class="k-reloj">
+      <span id="k-hora"></span>
+      <span style="margin:0 8px;opacity:.4">|</span>
+      <a href="index.html" class="muted tiny">Dashboard</a>
+      <span style="margin:0 8px;opacity:.4">|</span>
+      <span class="tiny" id="k-cambiar"></span>
+    </div>
+  </div>
+
+  <div id="k-contenido" style="flex:1;min-height:0"></div>
+</div>
+
+<script type="module">
+import * as D from './assets/datos.js';
+import { dibujarCuerpo } from './assets/cuerpo.js';
+
+const $ = s => document.querySelector(s);
+const salaId = new URLSearchParams(location.search).get('id') || 's1';
+const s = D.sala(salaId);
+if (!s){ document.body.innerHTML = '<p style="padding:40px;color:#fff">Sala no encontrada.</p>'; throw new Error('sin sala'); }
+
+$('#k-sala').textContent = s.nombre;
+$('#k-tipo').textContent = s.tipo;
+$('#k-cambiar').innerHTML = D.E.salas
+  .map(x => x.id === salaId ? `<b>${x.nombre.replace('Sala ','S')}</b>`
+                            : `<a href="sala.html?id=${x.id}">${x.nombre.replace('Sala ','S')}</a>`)
+  .join(' · ');
+
+setInterval(() => {
+  $('#k-hora').textContent = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+}, 1000);
+$('#k-hora').textContent = new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+
+/* ── Vista principal ───────────────────────────────────────────────── */
+function pintar(){
+  const act = D.E.activas[salaId];
+
+  if (!act){
+    $('#k-contenido').innerHTML = `
+      <div class="k-libre">
+        <div>
+          <div class="big">Sala libre</div>
+          <p class="tiny" style="margin-top:10px">
+            Esperando check-in desde recepción · protocolo cargado: ${s.protocolo.length} pasos
+          </p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const c = D.cliente(act.clienteId);
+  $('#k-contenido').innerHTML = `
+    <div class="k-body">
+      <div style="min-width:0;display:flex;flex-direction:column">
+        <div class="tiny muted" style="letter-spacing:.18em;text-transform:uppercase;font-weight:700">Cliente</div>
+        <div class="k-cliente">${D.nombreEnPantalla(c.nombre)}</div>
+        <div class="k-crono" data-crono="${act.inicio}">00:00</div>
+        <div class="tiny muted">de ${s.min} min previstos</div>
+        <ul class="k-pasos">
+          ${s.protocolo.map((p,i) => `
+            <li class="${i === act.paso ? 'on' : i < act.paso ? 'hecho' : ''}">
+              <span class="num">${i+1}</span>${p}
+            </li>`).join('')}
+        </ul>
+      </div>
+      <div>
+        <div class="tiny muted" style="letter-spacing:.18em;text-transform:uppercase;font-weight:700;margin-bottom:8px">
+          Zonas de trabajo
+        </div>
+        <div class="cuerpo-wrap" id="k-cuerpo"></div>
+        <p class="tiny muted" style="margin-top:12px;line-height:1.45">
+          Sin nombre completo ni diagnóstico en pantalla: esta vista se ve desde
+          el pasillo. El detalle clínico solo aparece en el aviso inicial.
+        </p>
+      </div>
+    </div>`;
+
+  const marcas = D.mapaDeMarcas(act.clienteId);
+  const host = $('#k-cuerpo');
+  for (const vista of ['frontal','dorsal']){
+    const col = document.createElement('div');
+    col.className = 'cuerpo-col';
+    col.innerHTML = `<div class="cap">${vista}</div>`;
+    const box = document.createElement('div');
+    box.style.maxWidth = '130px';
+    col.appendChild(box);
+    host.appendChild(col);
+    dibujarCuerpo(box, vista, marcas[vista]);
+  }
+}
+
+setInterval(() => {
+  document.querySelectorAll('[data-crono]').forEach(el => {
+    el.textContent = D.reloj(el.dataset.crono);
+  });
+}, 1000);
+
+/* ── Pop-up de bienvenida (el aviso de la visita anterior) ──────────── */
+function popup(clienteId){
+  const c = D.cliente(clienteId);
+  const av = D.avisosDe(clienteId);
+  const ses = D.sesionesDe(clienteId).filter(x => x.fin);
+  const ult = ses[0];
+
+  const el = document.createElement('div');
+  el.className = 'pop';
+  el.innerHTML = `
+    <div class="pop-card">
+      <div class="et">${s.nombre} · check-in</div>
+      <h2>${c.nombre}</h2>
+      ${ult ? `<p class="tiny muted" style="margin:-8px 0 16px">
+        Última visita: ${D.fFecha(ult.inicio)} · ${D.sala(ult.salaId)?.nombre ?? '—'} · ${ult.terapeuta}<br>
+        <span style="color:var(--txt)">“${ult.notas}”</span></p>` : ''}
+      ${av.length
+        ? av.map(a => `<div class="aviso ${a.prioridad==='alta'?'alta':''}">
+             <div class="pri">${a.prioridad==='alta'?'⚠ Precaución':'Nota de la sesión anterior'}</div>
+             <div>${a.texto}</div></div>`).join('')
+        : '<p class="muted">Sin avisos pendientes de visitas anteriores.</p>'}
+      ${c.alergias && c.alergias !== '—'
+        ? `<div class="chip warn" style="margin-top:8px">Alergia: ${c.alergias}</div>` : ''}
+      ${c.consent ? '' : '<div class="chip bad" style="margin-top:8px">Consentimiento RGPD sin firmar</div>'}
+      <div style="display:flex;gap:10px;margin-top:22px">
+        <button class="btn pri" id="pop-ok">Entendido, empezar</button>
+        <span class="tiny muted" style="align-self:center">se cierra solo en <b id="pop-seg">25</b> s</span>
+      </div>
+    </div>`;
+  document.body.appendChild(el);
+
+  let seg = 25;
+  const t = setInterval(() => {
+    seg--;
+    const n = el.querySelector('#pop-seg');
+    if (n) n.textContent = seg;
+    if (seg <= 0) cerrar();
+  }, 1000);
+
+  function cerrar(){
+    clearInterval(t);
+    el.remove();
+    D.marcarAvisosVistos(clienteId);
+  }
+  el.querySelector('#pop-ok').addEventListener('click', cerrar);
+}
+
+/* ── Tiempo real ───────────────────────────────────────────────────── */
+D.alCambiar(ev => {
+  pintar();
+  if (ev.tipo === 'checkin' && ev.salaId === salaId) popup(ev.clienteId);
+});
+
+pintar();
+</script>
+</body>
+</html>

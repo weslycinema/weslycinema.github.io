@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ficha de cliente · Centro de masaje (prototipo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/base.css">
+</head>
+<body data-pagina="cliente">
+
+<div class="demo-bar">
+  <strong>PROTOTIPO</strong>
+  <span>Ficha clínica de ejemplo. En producción estos datos son categoría especial (RGPD art. 9).</span>
+</div>
+
+<header class="top">
+  <div class="brand"><span class="brand-dot"></span> Centro&nbsp;Corporal</div>
+  <nav class="nav">
+    <a href="index.html">← Dashboard</a>
+    <a href="#" class="on" id="nav-nombre">Ficha</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div id="cabecera" style="margin-bottom:20px"></div>
+
+  <div class="grid g-ficha">
+
+    <!-- ── Columna principal ─────────────────────────────────────── -->
+    <div>
+      <section class="card" style="margin-bottom:16px">
+        <div class="card-h">
+          <h2>Mapa corporal</h2>
+          <span class="sub">toca una zona para registrar un hallazgo</span>
+          <span class="spacer"></span>
+          <div style="display:flex;gap:4px">
+            <button class="btn sm" id="modo-acum">Acumulado</button>
+            <button class="btn sm gh" id="modo-sesion">Por sesión</button>
+          </div>
+        </div>
+
+        <div id="tiempo" style="margin-bottom:14px"></div>
+
+        <div class="cuerpo-wrap">
+          <div class="cuerpo-col">
+            <div class="cap">Frontal</div>
+            <div id="svg-frontal"></div>
+          </div>
+          <div class="cuerpo-col">
+            <div class="cap">Dorsal</div>
+            <div id="svg-dorsal"></div>
+          </div>
+        </div>
+
+        <div class="leyenda">
+          <span><i style="background:#fde68a"></i>1 leve</span>
+          <span><i style="background:#fbbf24"></i>2</span>
+          <span><i style="background:#fb923c"></i>3</span>
+          <span><i style="background:#ef4444"></i>4</span>
+          <span><i style="background:#b91c1c"></i>5 severo</span>
+          <span><i style="background:#3730a3"></i>no tratar</span>
+        </div>
+        <p class="tiny muted" style="text-align:center;margin:10px 0 0">
+          Vista frontal: la izquierda de la imagen es el lado <em>derecho</em> del paciente.
+          Vista dorsal: coincide con el lado del paciente.
+        </p>
+      </section>
+
+      <section class="card" id="borrador-card" hidden style="margin-bottom:16px">
+        <div class="card-h">
+          <h2>Sesión sin guardar</h2>
+          <span class="sub" id="borrador-n"></span>
+        </div>
+        <div id="borrador-lista"></div>
+        <label class="f" for="b-notas">Notas de la sesión</label>
+        <textarea id="b-notas" rows="2" placeholder="Qué se ha trabajado, cómo ha respondido…"></textarea>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn pri" id="b-guardar">Guardar sesión en el historial</button>
+          <button class="btn gh" id="b-descartar">Descartar</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Historial de sesiones</h2></div>
+        <ul class="tl" id="historial"></ul>
+      </section>
+    </div>
+
+    <!-- ── Columna lateral ───────────────────────────────────────── -->
+    <div>
+      <section class="card" style="margin-bottom:16px">
+        <div class="card-h"><h2>Avisos para la próxima visita</h2></div>
+        <div id="avisos"></div>
+        <label class="f" for="nuevo-aviso">Dejar un aviso nuevo</label>
+        <textarea id="nuevo-aviso" rows="3"
+          placeholder="Ej.: insistir en trapecio derecho; no aplicar presión en lumbar…"></textarea>
+        <label class="f" for="aviso-pri">Prioridad</label>
+        <select id="aviso-pri">
+          <option value="media">Media — informativo</option>
+          <option value="alta">Alta — contraindicación / precaución</option>
+        </select>
+        <button class="btn pri" id="aviso-add" style="margin-top:12px;width:100%">Guardar aviso</button>
+        <p class="tiny muted" style="margin:10px 0 0">
+          Aparecerá como pop-up en la pantalla de la sala en cuanto este cliente
+          haga check-in, sin que nadie tenga que buscarlo.
+        </p>
+      </section>
+
+      <section class="card" style="margin-bottom:16px">
+        <div class="card-h">
+          <h2>Scan postural</h2>
+          <span class="chip info spacer">simulado</span>
+        </div>
+        <div id="scan"></div>
+        <button class="btn" id="scan-add" style="margin-top:12px;width:100%">Nuevo scan</button>
+        <p class="tiny muted" style="margin:10px 0 0">
+          En producción: foto frontal y lateral analizada con MediaPipe Pose en el
+          propio navegador (33 puntos anatómicos). Aquí las métricas son inventadas.
+        </p>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h2>Datos</h2></div>
+        <div id="datos" class="tiny"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<!-- Editor de marca -->
+<div class="modal-bg" id="modal" hidden>
+  <div class="modal">
+    <h3 id="mz-titulo">Zona</h3>
+    <p class="muted tiny" id="mz-sub"></p>
+    <label class="f">Tipo de hallazgo</label>
+    <select id="mz-tipo">
+      <option value="contractura">Contractura</option>
+      <option value="dolor">Dolor</option>
+      <option value="tension">Tensión</option>
+      <option value="lesion">Lesión / antecedente</option>
+      <option value="evitar">No tratar (contraindicado)</option>
+    </select>
+    <label class="f">Intensidad</label>
+    <div class="int-sel" id="mz-int">
+      <button data-i="1">1</button><button data-i="2">2</button>
+      <button data-i="3" class="on">3</button>
+      <button data-i="4">4</button><button data-i="5">5</button>
+    </div>
+    <label class="f" for="mz-nota">Nota</label>
+    <input type="text" id="mz-nota" placeholder="Opcional">
+    <div class="acts">
+      <button class="btn gh" id="mz-cancel">Cancelar</button>
+      <button class="btn pri" id="mz-ok">Añadir marca</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import * as D from './assets/datos.js';
+import { dibujarCuerpo, nombreZona, etiquetaLado, COLOR_INT } from './assets/cuerpo.js';
+
+const $ = s => document.querySelector(s);
+const params = new URLSearchParams(location.search);
+const cid = params.get('id') || 'c1';
+const c = D.cliente(cid);
+if (!c){ document.body.innerHTML = '<p style="padding:40px">Cliente no encontrado.</p>'; throw new Error('sin cliente'); }
+
+let modo = 'acum';        // 'acum' | 'sesion'
+let idx = null;           // índice en la lista ascendente de sesiones
+let borrador = {marcas: [], notas: ''};
+let zonaEditando = null;
+let intensidad = 3;
+
+const sesionesAsc = () => D.sesionesDe(cid).slice().reverse();
+
+/* ── Cabecera ──────────────────────────────────────────────────────── */
+function pintarCabecera(){
+  const ses = D.sesionesDe(cid);
+  const enSala = Object.entries(D.E.activas).find(([,a]) => a.clienteId === cid);
+  $('#nav-nombre').textContent = c.nombre;
+  $('#cabecera').innerHTML = `
+    <div class="card" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div class="avatar" style="width:52px;height:52px;font-size:18px">${D.iniciales(c.nombre)}</div>
+      <div>
+        <h1>${c.nombre}</h1>
+        <div class="tiny muted">${D.edad(c.nac)} años · ${c.tel} · ${ses.length} ${ses.length===1?'sesión':'sesiones'}</div>
+      </div>
+      <span class="spacer"></span>
+      ${enSala ? `<span class="chip ok">En ${D.sala(enSala[0]).nombre} ahora</span>` : ''}
+      ${c.consent ? '<span class="chip ok">Consentimiento firmado</span>'
+                  : '<span class="chip bad">Falta consentimiento RGPD</span>'}
+      ${c.alergias && c.alergias !== '—' ? `<span class="chip warn">Alergia: ${c.alergias}</span>` : ''}
+    </div>`;
+}
+
+/* ── Control de tiempo ─────────────────────────────────────────────── */
+function pintarTiempo(){
+  const ses = sesionesAsc();
+  if (!ses.length){
+    $('#tiempo').innerHTML = '<p class="tiny muted">Sin sesiones registradas todavía.</p>';
+    return;
+  }
+  if (idx === null) idx = ses.length - 1;
+  idx = Math.min(idx, ses.length - 1);
+  const s = ses[idx];
+  const etq = modo === 'acum'
+    ? (idx === ses.length - 1
+        ? `Acumulado — historial completo (${ses.length} sesiones)`
+        : `Acumulado hasta el ${D.fFecha(s.inicio)} (${idx + 1} de ${ses.length})`)
+    : `Solo la sesión del ${D.fFecha(s.inicio)} · ${s.terapeuta}`;
+
+  $('#tiempo').innerHTML = `
+    <div class="tiny muted" style="margin-bottom:6px">${etq}</div>
+    <input type="range" id="rango" min="0" max="${ses.length-1}" value="${idx}" style="width:100%">`;
+  $('#rango').addEventListener('input', e => { idx = +e.target.value; pintarCuerpo(); pintarTiempo(); });
+}
+
+/* ── Cuerpo ────────────────────────────────────────────────────────── */
+function marcasActuales(){
+  const ses = sesionesAsc();
+  const s = ses[idx];
+  const base = !ses.length ? {frontal:{},dorsal:{}}
+    : modo === 'sesion'
+      ? D.mapaDeMarcas(cid, {soloSesion: s.id})
+      : D.mapaDeMarcas(cid, {hasta: s.inicio});
+
+  // superponer el borrador para ver el efecto inmediato
+  for (const m of borrador.marcas){
+    const v = base[m.vista] || (base[m.vista] = {});
+    v[m.zona] = {intensidad: m.tipo === 'evitar' ? 0 : m.int,
+                 evitar: m.tipo === 'evitar', n: (v[m.zona]?.n || 0) + 1,
+                 tipo: m.tipo, nota: m.nota, ultima: 'borrador'};
+  }
+  return base;
+}
+
+function pintarCuerpo(){
+  const m = marcasActuales();
+  dibujarCuerpo($('#svg-frontal'), 'frontal', m.frontal, (z) => abrirEditor('frontal', z));
+  dibujarCuerpo($('#svg-dorsal'),  'dorsal',  m.dorsal,  (z) => abrirEditor('dorsal',  z));
+}
+
+/* ── Editor de marca ───────────────────────────────────────────────── */
+function abrirEditor(vista, zonaId){
+  zonaEditando = {vista, zonaId};
+  const z = zonaId.replace(/_(izq|der)$/,'');
+  const lado = (zonaId.match(/_(izq|der)$/) || [])[1];
+  $('#mz-titulo').textContent = nombreZona(vista, zonaId) + (lado ? ` ${etiquetaLado(lado)}` : '');
+  $('#mz-sub').textContent = `Vista ${vista} · ${c.nombre}`;
+  $('#mz-nota').value = '';
+  $('#modal').hidden = false;
+}
+$('#mz-int').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  intensidad = +b.dataset.i;
+  [...$('#mz-int').children].forEach(x => x.classList.toggle('on', x === b));
+});
+$('#mz-cancel').addEventListener('click', () => $('#modal').hidden = true);
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').hidden = true; });
+$('#mz-ok').addEventListener('click', () => {
+  const tipo = $('#mz-tipo').value;
+  borrador.marcas.push({
+    vista: zonaEditando.vista, zona: zonaEditando.zonaId,
+    tipo, int: tipo === 'evitar' ? 0 : intensidad, nota: $('#mz-nota').value.trim(),
+  });
+  $('#modal').hidden = true;
+  pintarBorrador(); pintarCuerpo();
+});
+
+/* ── Borrador ──────────────────────────────────────────────────────── */
+function pintarBorrador(){
+  const n = borrador.marcas.length;
+  $('#borrador-card').hidden = n === 0;
+  $('#borrador-n').textContent = `${n} marca${n===1?'':'s'} sin guardar`;
+  $('#borrador-lista').innerHTML = borrador.marcas.map((m,i) => `
+    <div class="marca" style="border-left-color:${m.tipo==='evitar'?'#6366f1':COLOR_INT[m.int]}">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="zn">${nombreZona(m.vista, m.zona)} ${etiquetaLado((m.zona.match(/_(izq|der)$/)||[])[1])}</span>
+        <span class="spacer"></span>
+        <button class="btn sm gh dgr" data-quitar="${i}">Quitar</button>
+      </div>
+      <div class="mt">${D.TIPOS_MARCA[m.tipo].etq}${m.tipo!=='evitar'?` · intensidad ${m.int}`:''}${m.nota?` · ${m.nota}`:''} · vista ${m.vista}</div>
+    </div>`).join('');
+}
+$('#borrador-lista').addEventListener('click', e => {
+  const b = e.target.closest('[data-quitar]'); if (!b) return;
+  borrador.marcas.splice(+b.dataset.quitar, 1);
+  pintarBorrador(); pintarCuerpo();
+});
+$('#b-descartar').addEventListener('click', () => {
+  borrador = {marcas: [], notas: ''}; $('#b-notas').value = '';
+  pintarBorrador(); pintarCuerpo();
+});
+$('#b-guardar').addEventListener('click', () => {
+  if (!borrador.marcas.length) return;
+  const enSala = Object.entries(D.E.activas).find(([,a]) => a.clienteId === cid);
+  D.E.sesiones.push({
+    id: D.nuevoId('x'), clienteId: cid,
+    salaId: enSala ? enSala[0] : D.E.salas[0].id,
+    terapeuta: 'Terapeuta (demo)',
+    inicio: new Date().toISOString(), fin: new Date().toISOString(),
+    notas: $('#b-notas').value.trim() || 'Sin notas.',
+    marcas: borrador.marcas,
+  });
+  D.guardar();
+  borrador = {marcas: [], notas: ''}; $('#b-notas').value = '';
+  idx = null;
+  todo();
+});
+
+/* ── Historial ─────────────────────────────────────────────────────── */
+function pintarHistorial(){
+  const ses = D.sesionesDe(cid);
+  const asc = sesionesAsc();
+  $('#historial').innerHTML = ses.length ? ses.map(s => {
+    const i = asc.findIndex(x => x.id === s.id);
+    return `
+    <li class="${i === idx ? 'act' : ''}">
+      <div class="fch">${D.fFecha(s.inicio)} · ${D.fHora(s.inicio)} · ${D.sala(s.salaId)?.nombre ?? '—'} · ${s.terapeuta}</div>
+      <div style="margin:3px 0 5px">${s.notas}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+        ${(s.marcas||[]).map(m => `
+          <span class="chip" style="border-left:3px solid ${m.tipo==='evitar'?'#6366f1':COLOR_INT[m.int]}">
+            ${nombreZona(m.vista, m.zona)} ${etiquetaLado((m.zona.match(/_(izq|der)$/)||[])[1])}
+            ${m.tipo!=='evitar'?`· ${m.int}`:'· no tratar'}
+          </span>`).join('')}
+        <button class="btn sm gh" data-ver="${s.id}">Ver en el mapa</button>
+      </div>
+    </li>`;
+  }).join('') : '<li class="muted">Sin sesiones.</li>';
+}
+$('#historial').addEventListener('click', e => {
+  const b = e.target.closest('[data-ver]'); if (!b) return;
+  modo = 'sesion';
+  idx = sesionesAsc().findIndex(s => s.id === b.dataset.ver);
+  sincronizarModo(); pintarTiempo(); pintarCuerpo(); pintarHistorial();
+  document.querySelector('.cuerpo-wrap').scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+/* ── Avisos ────────────────────────────────────────────────────────── */
+function pintarAvisos(){
+  const av = D.avisosDe(cid);
+  $('#avisos').innerHTML = av.length ? av.map(a => `
+    <div class="aviso ${a.prioridad==='alta'?'alta':''}">
+      <div class="pri">${a.prioridad === 'alta' ? '⚠ Precaución' : 'Nota'} · ${D.fFecha(a.creado)}</div>
+      <div>${a.texto}</div>
+    </div>`).join('')
+    : '<p class="tiny muted">Sin avisos pendientes.</p>';
+}
+$('#aviso-add').addEventListener('click', () => {
+  const t = $('#nuevo-aviso').value.trim();
+  if (!t) return;
+  D.E.avisos.push({id: D.nuevoId('a'), clienteId: cid, prioridad: $('#aviso-pri').value,
+                   texto: t, creado: new Date().toISOString(), visto: null});
+  D.guardar();
+  $('#nuevo-aviso').value = '';
+  pintarAvisos();
+});
+
+/* ── Scan ──────────────────────────────────────────────────────────── */
+function pintarScan(){
+  const sc = D.scansDe(cid)[0];
+  $('#scan').innerHTML = sc
+    ? `<div class="tiny muted" style="margin-bottom:8px">Último: ${D.fFecha(sc.fecha)}</div>` +
+      Object.entries(sc.metricas).map(([k,v]) => `
+        <div style="display:flex;gap:10px;padding:6px 0;border-bottom:1px solid var(--line-soft)">
+          <span class="muted tiny">${k}</span><span class="spacer"></span>
+          <span class="tiny mono">${v}</span></div>`).join('')
+    : '<p class="tiny muted">Este cliente no tiene ningún scan todavía.</p>';
+}
+$('#scan-add').addEventListener('click', () => {
+  const r = (a,b,d=1) => (a + Math.random()*(b-a)).toFixed(d);
+  const lado = () => Math.random() < .5 ? 'der.' : 'izq.';
+  D.E.scans.push({id: D.nuevoId('sc'), clienteId: cid, fecha: new Date().toISOString(),
+    metricas:{
+      'Desnivel de hombros': `+${r(0.2,2.4)} cm (${lado()} alto)`,
+      'Rotación de pelvis':  `${r(0,6,0)}° ${lado()}`,
+      'Inclinación de cabeza': `${r(1,7)}° ant.`,
+      'Apoyo plantar': ['Neutro','Pronación leve','Supinación leve'][Math.floor(Math.random()*3)],
+    }});
+  D.guardar();
+  pintarScan();
+});
+
+/* ── Datos ─────────────────────────────────────────────────────────── */
+function pintarDatos(){
+  $('#datos').innerHTML = `
+    <div class="muted">Teléfono</div><div style="margin-bottom:8px">${c.tel}</div>
+    <div class="muted">Alergias / intolerancias</div><div style="margin-bottom:8px">${c.alergias}</div>
+    <div class="muted">Notas generales</div><div style="margin-bottom:8px">${c.nota}</div>
+    <div class="muted">Consentimiento de datos de salud</div>
+    <div>${c.consent ? 'Firmado' : 'PENDIENTE — no debería tratarse sin firmar'}</div>`;
+}
+
+/* ── Modo ──────────────────────────────────────────────────────────── */
+function sincronizarModo(){
+  $('#modo-acum').className   = 'btn sm' + (modo === 'acum'   ? '' : ' gh');
+  $('#modo-sesion').className = 'btn sm' + (modo === 'sesion' ? '' : ' gh');
+}
+$('#modo-acum').addEventListener('click', () => {
+  modo = 'acum'; sincronizarModo(); pintarTiempo(); pintarCuerpo(); });
+$('#modo-sesion').addEventListener('click', () => {
+  modo = 'sesion'; sincronizarModo(); pintarTiempo(); pintarCuerpo(); });
+
+function todo(){
+  pintarCabecera(); sincronizarModo(); pintarTiempo(); pintarCuerpo();
+  pintarBorrador(); pintarHistorial(); pintarAvisos(); pintarScan(); pintarDatos();
+}
+D.alCambiar(() => todo());
+todo();
+</script>
+</body>
+</html>
